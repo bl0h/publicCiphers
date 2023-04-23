@@ -21,14 +21,27 @@ aliceSecret = pow(bobPublic, alicePrivate, q)
 bobSecret = pow(alicePublic, bobPrivate, q)
 print("Alice and Bobs shared secret key:", aliceSecret, bobSecret)
 
-aliceSharedSecret = SHA256.new(aliceSecret)  
-bobSharedSecret = SHA256.new(bobSecret)
+if(aliceSecret != bobSecret):
+    print("Secret keys are not the same... exiting")
+    exit()
+
+symmetric = SHA256.new(aliceSecret.to_bytes(16, byteorder = 'big')).digest()
 
 aliceMessage = "Hi Bob!"
 bobMessage = "Hi Alice!"
 
 iv = secrets.token_bytes(16)
-cipher = AES.new(aliceSharedSecret, AES.MODE_CBC, iv)
+cipher = AES.new(symmetric, AES.MODE_CBC, iv)
+aliceEncryptedMessage = cipher.encrypt(pad(aliceMessage.encode(), AES.block_size))
+cipher = AES.new(symmetric, AES.MODE_CBC, iv)
+bobEncryptedMessage = cipher.encrypt(pad(bobMessage.encode(), AES.block_size))
 
-aliceEncryptedMessage = cipher.encrypt(pad(aliceMessage, AES.block_size))
-bobEncryptedMessage = cipher.encrypt(pad(bobMessage, AES.block_size))
+cipher = AES.new(symmetric, AES.MODE_CBC, iv)
+bobDecryptedMessage = cipher.decrypt(bobEncryptedMessage)
+bobDecryptedMessage = bobDecryptedMessage.decode().strip()
+print("Alice decrypts the message:", bobDecryptedMessage)
+
+cipher = AES.new(symmetric, AES.MODE_CBC, iv)
+aliceDecryptedMessage = cipher.decrypt(aliceEncryptedMessage)
+aliceDecryptedMessage = aliceDecryptedMessage.decode().strip()
+print("Bob decrypts the message:", aliceDecryptedMessage)
