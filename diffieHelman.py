@@ -38,10 +38,10 @@ bobEncryptedMessage = cipher.encrypt(pad(bobMessage.encode(), AES.block_size))
 
 cipher = AES.new(symmetric, AES.MODE_CBC, iv)
 bobDecryptedMessage = cipher.decrypt(bobEncryptedMessage)
-bobDecryptedMessage = bobDecryptedMessage.decode().strip()
+bobDecryptedMessage = bobDecryptedMessage.decode()
 print("Alice decrypts the message:", bobDecryptedMessage)
 
 cipher = AES.new(symmetric, AES.MODE_CBC, iv)
 aliceDecryptedMessage = cipher.decrypt(aliceEncryptedMessage)
-aliceDecryptedMessage = aliceDecryptedMessage.decode().strip()
+aliceDecryptedMessage = aliceDecryptedMessage.decode()
 print("Bob decrypts the message:", aliceDecryptedMessage)
