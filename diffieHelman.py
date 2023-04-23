@@ -9,12 +9,12 @@ from Crypto.Util.Padding import pad
 q = 37  #prime number
 a = 5   #a < q and a is a primitive root of q
 
-alicePublic = random.randint(0, q)
-alicePrivate = pow(a, alicePublic, q)
+alicePrivate = random.randint(0, q)
+alicePublic = pow(a, alicePrivate, q)
 print("Alice public:", alicePublic, "private:", alicePrivate)
 
-bobPublic = random.randint(0, q)
-bobPrivate = pow(a, bobPublic, q)
+bobPrivate = random.randint(0, q)
+bobPublic = pow(a, bobPrivate, q)
 print("Bob public:", bobPublic, "private:", bobPrivate)
 
 aliceSecret = pow(bobPublic, alicePrivate, q)
